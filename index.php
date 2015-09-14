@@ -35,6 +35,8 @@ function url_suffix_setup() {
   /* Add meta boxes on the 'add_meta_boxes' hook. */
   add_action( 'add_meta_boxes', 'url_suffix_meta_boxes' );
   add_action( 'save_post', 'url_suffix_save', 10, 2 );
+  add_action( 'add_meta_boxes', 'lead_magnet_add_meta_box' );
+  add_action( 'save_post', 'lead_magnet_suffix_save', 10, 2 );
 }
 function url_suffix_meta_boxes() {
   add_meta_box(
@@ -70,5 +72,3 @@ function url_suffix_save($post_id, $post ) {
   elseif ( '' == $new_meta_value && $meta_value )
     delete_post_meta( $post_id, $meta_key, $meta_value );
 }
-
-
