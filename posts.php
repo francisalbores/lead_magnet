@@ -19,6 +19,7 @@ function lead_magnet_meta_box_callback( $object ) {
     <label for="url-suffix-post-class"><?php _e( "Choose a Lead Magnet to associate for this post.", 'init' ); ?></label>
     <br />
     <select class="widefat" name="lead-magnet-class" id="lead-magnet-class">
+      <option value="">n/a</option>
       <?php
       $posts = get_posts(array(
         'post_type'   => 'leadMagnet',
@@ -30,7 +31,7 @@ function lead_magnet_meta_box_callback( $object ) {
       foreach($posts as $p){
         $name = get_the_title($p);
         $suffix = get_post_meta($p, 'url-suffix-class', true);
-        if($lmvalue == $p) {
+        if($lmvalue == $suffix) {
           ?>
           <option data-id="<?php echo $p ?>" selected value="<?php echo $suffix ?>"><?php echo $name ?></option>
           <?php
@@ -69,12 +70,15 @@ function lead_magnet_suffix_save($post_id, $post ) {
 }
 
 // Updating Post Slug
-add_filter( 'wp_insert_post_data', 'my_function', 50, 2 );
+add_filter( 'wp_insert_post_data', 'my_function', 1, 2 );
 function my_function( $data, $postarr ) {
-  $meta_key = 'lead-magnet-class';
-  $meta_value = get_post_meta( $postarr['post_ID'], $meta_key, true );
   if ( !in_array( $data['post_status'], array( 'draft', 'pending', 'auto-draft' ) ) ) {
-      $data['post_name'] = sanitize_title( $data['post_title'] ).'-'.$meta_value;
+    if($postarr['lead-magnet-class']!=""){
+      $data['post_name'] = sanitize_title( $data['post_title'] ).'-'.$postarr['lead-magnet-class'];
+    }
+    else{
+      $data['post_name'] = sanitize_title( $data['post_title'] );
+    }
   }
   return $data;
 }
