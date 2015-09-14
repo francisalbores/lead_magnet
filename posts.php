@@ -58,6 +58,8 @@ function lead_magnet_suffix_save($post_id, $post ) {
   if ( !current_user_can( $post_type->cap->edit_post, $post_id ) )
     return $post_id;
   $new_meta_value = ( isset( $_POST['lead-magnet-class'] ) ? sanitize_html_class( $_POST['lead-magnet-class'] ) : '' );
+  $meta_key = 'lead-magnet-class';
+  $meta_value = get_post_meta( $post_id, $meta_key, true );
   if ( $new_meta_value && '' == $meta_value )
     add_post_meta( $post_id, $meta_key, $new_meta_value, true );
   elseif ( $new_meta_value && $new_meta_value != $meta_value )
